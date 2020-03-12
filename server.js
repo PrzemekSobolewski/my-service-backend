@@ -1,6 +1,15 @@
 require('dotenv').config();
+const http = require('http');
+const app = require('./app');
 
-const express = require('express');
+const port = process.env.PORT || 4000;
+
+const server = http.createServer(app);
+
+server.listen(port, () => {
+    console.log('Server listening on: ' + port);
+});
+/*const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
@@ -100,4 +109,4 @@ app.get('/verifyToken', function (req, res) {
 
 app.listen(port, () => {
     console.log('Server listening on: ' + port);
-});
+});*/
