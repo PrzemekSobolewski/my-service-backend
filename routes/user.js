@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-
+const utils = require('../utils');
 const User = require("../models/user");
+const checkAuth = require("../middleware/check-auth")
 
 router.post('/signup', (req, res, next) => {
     User.find({email: req.body.email})
@@ -45,7 +46,7 @@ router.post('/signup', (req, res, next) => {
         })
 });
 
-router.delete('/:userId', (req, res, next) => {
+router.delete('/:userId', checkAuth,  (req, res, next) => {
     User.remove({_id: req.params.userId})
         .exec()
         .then(result => {
@@ -58,6 +59,45 @@ router.delete('/:userId', (req, res, next) => {
             res.status(500).json({
                 error: err
             });
+        });
+});
+
+router.post('/login', (req, res, next) => {
+    User.find({email: req.body.email})
+        .exec()
+        .then(user => {
+            if(user.length < 1) {
+                res.status(404).json({
+                    message: "User not exist. Log in failed"
+                })
+            }
+            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+                if(err) {
+                    console.log(err);
+                    return res.status(401).json({
+                        error: "Auth failed. Invalid password"
+                    })
+                }
+                if(result) {
+                    const token = utils.generateToken(user);
+                    const userObj = utils.getCleanUser(user);
+                    return res.status(200).json({
+                        message: "Auth success",
+                        user: userObj,
+                        token: token
+                    })
+                }else {
+                    res.status(401).json({
+                        message: "Auth failed"
+                    })
+                }
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
         });
 });
 

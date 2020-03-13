@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const userRoutes = require('./routes/user');
-const mongoPWD = "...";
+const mongoPWD = "5fmWy4HU";
 
 mongoose.connect(`mongodb+srv://PrzemekSobolewski:${mongoPWD}@myservice-6uguc.mongodb.net/test?retryWrites=true&w=majority`,
     {
@@ -13,7 +13,6 @@ mongoose.connect(`mongodb+srv://PrzemekSobolewski:${mongoPWD}@myservice-6uguc.mo
         useUnifiedTopology: true
     }
     );
-
 
 app.use(morgan("dev"));
 app.use('/uploads', express.static('uploads'));
