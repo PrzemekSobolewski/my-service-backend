@@ -4,6 +4,7 @@ function generateToken(user) {
     if (!user) return null;
 
     let u = {
+        userName: user[0].userName,
         email: user[0].email,
         userId: user[0]._id
     };
@@ -18,6 +19,7 @@ function getCleanUser(user) {
     if (!user) return null;
 
     return {
+        userName: user[0].userName,
         email: user[0].email,
         userId: user[0]._id
     };

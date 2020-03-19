@@ -15,35 +15,46 @@ router.post('/signup', (req, res, next) => {
                     message: "User already exists"
                 });
             } else {
-                bcrypt.hash(req.body.password, 10, (err, hash) => {
-                    if (err) {
-                        return res.status(500).json({
-                            error: err
+                User.find({userName: req.body.userName})
+                .exec()
+                .then(userName => {
+                    if (userName.length >= 1) {
+                        return res.status(409).json({
+                            message: "There is already user with this name"
                         });
-                    } else {
-                        const user = new User({
-                            _id: new mongoose.Types.ObjectId(),
-                            email: req.body.email,
-                            password: hash
-                        });
-                        user
-                            .save()
-                            .then(result => {
-                                console.log(result);
-                                res.status(201).json({
-                                    message: "User created"
-                                });
-                            })
-                            .catch(err => {
-                                console.log(err);
-                                res.status(500).json({
+                    } else { 
+                        bcrypt.hash(req.body.password, 10, (err, hash) => {
+                            if (err) {
+                                return res.status(500).json({
                                     error: err
                                 });
-                            })
+                            } else {
+                                const user = new User({
+                                    _id: new mongoose.Types.ObjectId(),
+                                    userName: req.body.userName,
+                                    email: req.body.email,
+                                    password: hash
+                                });
+                                user
+                                    .save()
+                                    .then(result => {
+                                        console.log(result);
+                                        res.status(201).json({
+                                            message: "User created"
+                                        });
+                                    })
+                                    .catch(err => {
+                                        console.log(err);
+                                        res.status(500).json({
+                                            error: err
+                                        });
+                                    })
+                            }
+                        });
                     }
                 });
             }
-        })
+        });
 });
 
 router.delete('/:userId', checkAuth,  (req, res, next) => {
