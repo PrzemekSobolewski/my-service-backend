@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const userRoutes = require('./routes/user');
-const mongoPWD = "5fmWy4HU";
+const mongoPWD = "...";
 
 mongoose.connect(`mongodb+srv://PrzemekSobolewski:${mongoPWD}@myservice-6uguc.mongodb.net/test?retryWrites=true&w=majority`,
     {
