@@ -25,7 +25,12 @@ function getCleanUser(user) {
     };
 }
 
+function decodeToken(token) {
+    return decoded = jwt.verify(token, process.env.JWT_SECRET);
+}
+
 module.exports = {
     generateToken,
+    decodeToken,
     getCleanUser
 };

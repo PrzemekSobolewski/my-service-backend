@@ -92,6 +92,7 @@ router.post('/login', (req, res, next) => {
                 if(result) {
                     const token = utils.generateToken(user);
                     const userObj = utils.getCleanUser(user);
+                    utils.decodeToken(token);
                     return res.status(200).json({
                         message: "Auth success",
                         user: userObj,
@@ -110,6 +111,16 @@ router.post('/login', (req, res, next) => {
                 error: err
             })
         });
+});
+
+router.post('/verifyToken', checkAuth, (req, res, next) => {
+    let user = utils.decodeToken(req.body.token);
+    return res.status(200).json({
+        message: "Auth success",
+        userName: user.userName,
+        email: user.email,
+        userId: user.userId,
+    })
 });
 
 module.exports = router;
